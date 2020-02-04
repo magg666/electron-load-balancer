@@ -12,7 +12,9 @@ const createHiddenWindow = filePath => {
     protocol: 'file:',
     slashes: true,
   });
-  let hiddenWindow = new BrowserWindow({ show: false });
+  let hiddenWindow = new BrowserWindow({ show: true, webPreferences: {
+      nodeIntegration: true
+    } });
   hiddenWindow.loadURL(startUrl);
   hiddenWindow.on('closed', () => {});
   return hiddenWindow;
@@ -106,7 +108,7 @@ exports.sendData = (ipcRenderer, processName, values) => {
   });
 };
 
-exports.onRecieveData = (ipcRenderer, processNameOuter, func) => {
+exports.onReceiveData = (ipcRenderer, processNameOuter, func) => {
   ipcRenderer.on('TO_WORKER', (event, args) => {
     const { processName, values } = args;
     processNameOuter === processName && func(values);
